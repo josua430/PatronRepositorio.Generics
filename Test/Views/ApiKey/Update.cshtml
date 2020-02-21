@@ -1,0 +1,99 @@
+﻿@using Test.Models
+@model  changekey
+
+@{
+    ViewBag.Title = "Test";
+    ViewBag.Opcion = "Manage";
+    ViewBag.SubOpcion = "Key";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (@Html.BeginForm())
+{
+    <style type="text/css">
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <div class="col-md-12">
+        <div class="box box-primary" style="height: 100%">
+            <div class="panel panel-default" style="margin: 1% 1% 1% 1%">
+                <div class="panel-heading">Update Key</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <!-- BEGIN PAGE CONTENT-->
+
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Full Name od Developer:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.DevName, new { @class = "form-control", maxlength = 49 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                New Key:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.newKey, new { @class = "form-control", maxlength = 49 })
+                            </div>
+                        </div>
+                        <br />
+
+                    </div>
+                    <div class="col-md-3 col-sm-2 col-lg-offset-1 ">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            Back
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 col-sm-2 col-lg-offset-5 ">
+                        <button type="submit" class="btn btn-default" id="btnSave">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+    {
+        @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+    }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+    {
+        @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+    }
+
+        $("#btnSave").click(function (event) {
+
+            var strMensaje = "";
+
+            if ($("#DevName").val() == null || $("#DevName").val().trim() == "") {
+                strMensaje = strMensaje + "Fill the Developer Name </br>";
+            }
+
+            if ($("#newKey").val() == null || $("#newKey").val().trim() == "") {
+                strMensaje = strMensaje + "Fill the new Key </br>";
+            }
+            if (strMensaje != "") {
+                ShowMessageWarning(strMensaje);
+                event.preventDefault(event);
+            }
+        });
+    });
+
+
+</script>

@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+    ViewBag.Opcion = "Administrar";
+    ViewBag.SubOpcion = "Pedidos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form method="POST">
+
+    <div class="col-md-12">
+        <div class="box box-primary" style="height: 100%">
+            <br />
+            <div class="portlet-title">
+                <a href="@Url.Action("Insert", "Order")" class="btn btn-default btn-md">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Nuevo pedido...
+                </a>
+            </div>
+            <br />
+            <div id="grid"></div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    var dsUsuario = new kendo.data.DataSource({
+        pageSize:10,
+        transport: {
+            read: {
+                url: "@Url.Action("LoadGrid", "Order")",
+            type: "POST"
+        }
+    },
+        schema: {
+            model: {
+                id: "IdPedido",
+                fields: {
+                    IdIUser:{editable:false}
+        }
+    }
+    }
+    });
+    var gridUsuario = $("#grid").kendoGrid({
+        toolbar: ["excel"],
+        excel: {
+            allPages: true
+        },
+        excelExport: function (e) {
+            e.workbook.fileName = "Pedidos.xlsx";
+        },
+        columns: [
+            { field: "IdPedido", title: "Nro. Pedido" },
+            { field: "IdCliente", title: "Id Cliente" },
+            { field: "NombresCliente", title: "Cliente" }, 
+            { field: "DescripcionPedido", title: "Descripción" },
+            { field: "MetodoPago", title: "Método Pago" },
+            { field: "ValorPedido", title: "Valor" },
+            { field: "FechaPedido", title: "Fecha", template: '#= kendo.toString(kendo.parseDate(FechaPedido), "yyyy-MM-dd HH:mm:ss")#' }
+            @MvcHtmlString.Create(@" ,{ template: ""<a class='btn btn-success' href='" + (Url.Action("Update", "Order")) + "?id=#= IdPedido #'><span class='fa fa-edit'></span> Edit</a>" + @"""}")
+            @MvcHtmlString.Create(@" ,{ template: ""<input type='hidden' id='id' value='#= IdPedido #' /> <button type='button' class='btn btn-danger' id='btnDelete'><span class='glyphicon glyphicon-trash'></span> Delete</button>""}")
+    ],
+    sortable:true,
+    scrollable: true,
+    pageable: {
+        pageSizes: false,
+        messages: {
+            itemsPerPage: "Registros por página",
+            display: "Mostrando {0}-{1} de {2} registros"
+        }
+    },
+    culture: "es-CO",
+        dataSource: dsUsuario
+    }).data("kendoGrid");
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+        {
+            @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+        }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+        {
+            @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+        }
+
+        $(document).delegate("#btnDelete", "click", function () {
+
+            var id = $(this).parent().find('#id').val();
+
+            var div = $("<div>¿Confirma la operación?</div>");
+            div.dialog({
+                title: "CONFIRM",
+                modal: true,
+                buttons: [
+                    {
+                        text: "SI",
+                        click: function () {
+                            $.ajax({
+                                url: '../Order/Delete',
+                                data: { id: id },
+                                error: function (req, status, error) {
+                                    ShowMessageError(req.responseText);
+                                },
+                                success: function (response) {
+                                    if (response != null) {
+                                        if (response.Type == 'Error') {
+                                            ShowMessageSuccess(response.Message);
+                                        } else {
+                                            ShowMessageSuccess(response.Message);
+                                            location.reload();
+
+                                        }
+                                    }
+                                }
+                            });
+                            $(this).dialog('close');
+                        }
+                    },
+                    {
+                        text: "NO",
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+    });
+</script>

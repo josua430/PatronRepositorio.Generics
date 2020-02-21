@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+}
+
+<h1>Test</h1>
+<div class="container-fluid placeholders">
+    <div class="row">
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+        {
+            @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+        }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+        {
+            @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+        }
+
+    });
+
+
+</script>
+

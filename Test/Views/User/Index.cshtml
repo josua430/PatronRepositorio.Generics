@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Test";
+    ViewBag.Opcion = "Manage";
+    ViewBag.SubOpcion = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form method="POST">
+
+    <div class="col-md-12">
+        <div class="box box-primary" style="height: 100%">
+            <br />
+            <div class="portlet-title">
+                <a href="@Url.Action("Insert", "User")" class="btn btn-default btn-md">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    New user...
+                </a>
+            </div>
+            <br />
+            <div id="grid"></div>
+        </div>
+    </div>
+
+</form>
+
+<script>
+    var dsUsuario = new kendo.data.DataSource({
+        pageSize:10,
+        transport: {
+            read: {
+                url: "@Url.Action("LoadGrid", "User")",
+            type: "POST"
+        }
+    },
+        schema: {
+            model: {
+                id: "IdUser",
+                fields: {
+                    IdIUser:{editable:false}
+        }
+    }
+    }
+    });
+    var gridUsuario = $("#grid").kendoGrid({
+        toolbar: ["excel"],
+        excel: {
+            allPages: true
+        },
+        excelExport: function (e) {
+            e.workbook.fileName = "Users.xlsx";
+        },
+        columns: [
+            { field: "IdUser", title: "Id", hidden:true },
+            { field: "UserName", title: "UserName" },
+            { field: "Role", title: "Role" },
+            { field: "Age", title: "Age" },
+            { field: "Gender", title: "Gender" },
+            { field: "Nationality", title: "Nationality" }
+            @MvcHtmlString.Create(@" ,{ template: ""<a class='btn btn-success' href='" + (Url.Action("Update", "User")) + "?id=#= IdUser #'><span class='fa fa-edit'></span> Edit</a>" + @"""}")
+            @MvcHtmlString.Create(@" ,{ template: ""<input type='hidden' id='id' value='#= IdUser #' /> <button type='button' class='btn btn-danger' id='btnDelete'><span class='glyphicon glyphicon-trash'></span> Delete</button>""}")
+    ],
+    sortable:true,
+    scrollable: true,
+    pageable: {
+        pageSizes: false,
+        messages: {
+            itemsPerPage: "Records by page",
+            display: "Showing {0}-{1} of {2} records"
+        }
+    },
+    culture: "es-CO",
+        dataSource: dsUsuario
+    }).data("kendoGrid");
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+        {
+            @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+        }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+        {
+            @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+        }
+
+        $(document).delegate("#btnDelete", "click", function () {
+
+            var id = $(this).parent().find('#id').val();
+
+            var div = $("<div>¿Are you sure?</div>");
+            div.dialog({
+                title: "CONFIRM",
+                modal: true,
+                buttons: [
+                    {
+                        text: "SI",
+                        click: function () {
+                            $.ajax({
+                                url: '../User/Delete',
+                                data: { id: id },
+                                error: function (req, status, error) {
+                                    ShowMessageError(req.responseText);
+                                },
+                                success: function (response) {
+                                    if (response != null) {
+                                        if (response.Type == 'Error') {
+                                            ShowMessageSuccess(response.Message);
+                                        } else {
+                                            ShowMessageSuccess(response.Message);
+                                            location.reload();
+
+                                        }
+                                    }
+                                }
+                            });
+                            $(this).dialog('close');
+                        }
+                    },
+                    {
+                        text: "NO",
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+    });
+</script>

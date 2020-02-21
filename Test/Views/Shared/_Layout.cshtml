@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title </title>
+    <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
+
+        .dropdown-header {
+            color: white;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            background-color: #f5f5f5;
+        }
+
+        .container-fluid .text-muted {
+            margin: 20px 0;
+        }
+
+        .critical {
+            background-color: red;
+            color: white;
+        }
+
+        .warning {
+            background-color: orange;
+            color: white;
+        }
+
+        .ok {
+            background-color: green;
+            color: white;
+        }
+    </style>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Content/Admin.css")" rel="stylesheet" type="text/css" />*@
+    <link href="@Url.Content("~/Content/font-awesome.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2019.1.115/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2019.1.115/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/kendo/2019.1.115/kendo.metro.min.css")" rel="stylesheet" type="text/css" />
+    
+    @*<link href="@Url.Content("~/Content/kendo/2019.1.115/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />*@
+
+    @*<link href="@Url.Content("~/Content/kendo/2019.1.115/kendo.dataviz.material.min.css")" rel="stylesheet" type="text/css" />*@
+    <link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/jszip.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    @*<script src="@Url.Content("~/Scripts/app.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/layout.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/kendo.culture.es-CO.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/2019.1.115/kendo.messages.es-CO.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.blockUI.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/pako_deflate.min.js")"></script>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/images/blog.ico" />
+</head>
+<body class="skin-Gray" style="background-color:rgb(160, 203, 117);">
+    <script>
+        $(document).ready(function () {
+            var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
+                isClosed = false;
+
+            trigger.click(function () {
+                hamburger_cross();
+            });
+
+            function hamburger_cross() {
+
+                if (isClosed == true) {
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                } else {
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                }
+            }
+
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+            });
+        });
+    </script>
+
+    <div id="wrapper">
+        <div class="overlay"></div>
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="@Url.Action("Index", "Home")"><img alt="Test" height="42" width="42" src="~/Content/images/blog_image.png">  </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Client")"><i class="fa fa-user"></i> Clientes</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Order")"><i class="fa fa-gift"></i> Pedidos</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("MoreOrders", "Client")"><i class="fa fa-area-chart"></i> Cliente con mas pedidos</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("ExpensiveOrder", "Client")"><i class="fa fa-dollar"></i> Cliente con cuenta mas costosa</a>
+                </li>
+                <li>
+                    <a href="@Url.Action("logOut", "Login")"><i class="fa fa-times"></i><span> Cerrar Sesión</span></a>
+                </li>
+            </ul>
+        </nav>
+        <div id="page-content-wrapper">
+            <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+            <div class="container">
+                <h1>
+                    @ViewBag.Opcion
+                    <small>@ViewBag.SubOpcion</small>
+                </h1>
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <span id="popupNotification"></span>
+</body>
+</html>

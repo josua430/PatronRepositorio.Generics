@@ -1,0 +1,112 @@
+﻿@using WebApi.Models
+@model  WebApi.Models.ClientModel
+
+@{
+    ViewBag.Title = "Test";
+    ViewBag.Opcion = "Cliente";
+    ViewBag.SubOpcion = "Cliente con cuenta mas costosa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (@Html.BeginForm())
+{
+    <style type="text/css">
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <div class="col-md-12">
+        @Html.HiddenFor(a => a.IdCliente)
+        <div class="box box-primary" style="height: 100%">
+            <div class="panel panel-default" style="margin: 1% 1% 1% 1%">
+                <div class="panel-heading">Cliente</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <!-- BEGIN PAGE CONTENT-->
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Nombres:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.Nombres, new { @class = "form-control", maxlength = 49 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Apellidos:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.Apellidos, new { @class = "form-control", maxlength = 49 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Telefono:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.Telefono, new { @class = "form-control", maxlength = 29 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Celular:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.Celular, new { @class = "form-control", maxlength = 15, @type = "number" })
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Correo:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.Correo, new { @class = "form-control", maxlength = 50 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Valor Cuenta:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.CuentaMasCostosa, new { @class = "form-control", maxlength = 10 })
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class="col-md-3 col-sm-2 col-lg-offset-1 ">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-default">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            Atrás
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+    {
+        @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+    }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+    {
+        @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+    }
+    });
+
+
+</script>

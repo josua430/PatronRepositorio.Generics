@@ -1,0 +1,131 @@
+﻿@using WebApi.Models
+@model  WebApi.Models.OrderModel
+
+@{
+    ViewBag.Title = "Test";
+    ViewBag.Opcion = "Actualizar";
+    ViewBag.SubOpcion = "Pedido";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (@Html.BeginForm())
+{
+    <style type="text/css">
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <div class="col-md-12">
+        @Html.HiddenFor(a => a.IdPedido)
+        <div class="box box-primary" style="height: 100%">
+            <div class="panel panel-default" style="margin: 1% 1% 1% 1%">
+                <div class="panel-heading">Actualizar Pedido</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <!-- BEGIN PAGE CONTENT-->
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Cliente:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.DropDownListFor(a => a.IdCliente, (IEnumerable<SelectListItem>)ViewBag.Clients, "Seleccione", new { @class = "form-control btn-block" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Descripción:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.DescripcionPedido, new { @class = "form-control", maxlength = 99 })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Método Pago:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.DropDownListFor(a => a.MetodoPago, new List<SelectListItem>() {
+                               new SelectListItem() { Text = "Efectivo", Value = "Efectivo"},
+                           new SelectListItem() { Text = "Tarjeta", Value = "Tarjeta"} } , "Seleccione", new { @class = "form-control btn-block" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 col-lg-offset-1 ">
+                                Valor:
+                            </div>
+                            <div class="col-md-4 col-lg-offset-1 ">
+                                @Html.TextBoxFor(a => a.ValorPedido, new { @class = "form-control", maxlength = 9, @type = "number" })
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class="col-md-3 col-sm-2 col-lg-offset-1 ">
+                        <a href="@Url.Action("Index", "Order")" class="btn btn-default">
+                            <span class="glyphicon glyphicon-backward"></span>
+                            Atrás
+                        </a>
+                    </div>
+
+
+                    <div class="col-md-3 col-sm-2 col-lg-offset-5 ">
+                        <button type="submit" class="btn btn-default" id="btnSave">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    $(document).ready(function () {
+        @if (!String.IsNullOrEmpty(ViewBag.Error))
+    {
+        @Html.Raw((string.Format("ShowMessageError('{0}');", ViewBag.Error )))
+    }
+
+        @if (!String.IsNullOrEmpty(ViewBag.Success))
+    {
+        @Html.Raw((string.Format("ShowMessageSuccess('{0}');", ViewBag.Success)))
+    }
+
+        $("#btnSave").click(function (event) {
+
+            var strMensaje = "";
+
+            if ($("#IdCliente").val() == null || $("#IdCliente").val().trim() == "") {
+                strMensaje = strMensaje + "Seleccione cliente </br>";
+            }
+
+            if ($("#DescripcionPedido").val() == null || $("#DescripcionPedido").val().trim() == "") {
+                strMensaje = strMensaje + "Ingrese Descripción </br>";
+            }
+            if ($("#ValorPedido").val() < 10000 && $("#MetodoPago").val().trim() == "Tarjeta") {
+                strMensaje = strMensaje + "No se puede pagar con tarjeta si la cuenta es menor a 10.000 </br>";
+            }
+            if ($("#MetodoPago").val() == null || $("#MetodoPago").val().trim() == "" || $("#MetodoPago").val().trim() == "Seleccione") {
+                strMensaje = strMensaje + "Seleccione método de pago </br>";
+            }
+            if ($("#ValorPedido").val() == null || $("#ValorPedido").val().trim() == "") {
+                strMensaje = strMensaje + "Ingrese valor </br>";
+            }
+
+            if (strMensaje != "") {
+                ShowMessageWarning(strMensaje);
+                event.preventDefault(event);
+            }
+        });
+    });
+
+
+</script>
